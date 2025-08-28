@@ -1,3 +1,5 @@
 .ccls-cache/
 .luarc.json
 .nvim.lua
+elixir.md 
+.agent.md
