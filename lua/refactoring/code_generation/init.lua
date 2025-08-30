@@ -14,6 +14,7 @@ local cs = require("refactoring.code_generation.langs.cs")
 local ruby = require("refactoring.code_generation.langs.ruby")
 local powershell = require("refactoring.code_generation.langs.powershell")
 local vimscript = require("refactoring.code_generation.langs.vimscript")
+local elixir = require("refactoring.code_generation.langs.elixir")
 
 ---@type table<refactor.ft, refactor.CodeGeneration>|{new_line: fun(): string}
 local M = {
@@ -35,6 +36,7 @@ local M = {
 
     powershell = powershell,
     vim = vimscript,
+    elixir = elixir,
 
     -- TODO: Take this and make all code generation subclassed.
     -- This should just be a function of code generation.

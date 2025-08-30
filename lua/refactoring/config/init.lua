@@ -74,6 +74,7 @@ local default_extract_var_statements = {}
 ---| "python"
 ---| "ruby"
 ---| "cs"
+---| "elixir"
 
 ---@class refactor.ConfigOpts
 ---@field code_generation? table<string, refactor.CodeGeneration>|{new_line: fun(): string}
