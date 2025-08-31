@@ -96,21 +96,29 @@ defp helper(value), do: value * 2
                 args = { "arg1", "arg2" },
             }, "my_function(arg1, arg2)")
 
-            test_code_generation("should generate return statement", {
-                operation = "return",
-            }, "some_value")
+            it("should generate return statement", function()
+                local elixir = require("refactoring.code_generation.langs.elixir")
+                local result = elixir["return"]("some_value")
+                assert.are.same("some_value", result)
+            end)
 
-            test_code_generation("should generate comment", {
-                operation = "comment",
-            }, "# This is a comment")
+            it("should generate comment", function()
+                local elixir = require("refactoring.code_generation.langs.elixir")
+                local result = elixir.comment("This is a comment")
+                assert.are.same("# This is a comment", result)
+            end)
 
-            test_code_generation("should pack values into tuple", {
-                operation = "pack",
-            }, "{value1, value2}")
+            it("should pack values into tuple", function()
+                local elixir = require("refactoring.code_generation.langs.elixir")
+                local result = elixir.pack({"value1", "value2"})
+                assert.are.same("{value1, value2}", result)
+            end)
 
-            test_code_generation("should terminate code (no-op for Elixir)", {
-                operation = "terminate",
-            }, "some_code")
+            it("should terminate code (no-op for Elixir)", function()
+                local elixir = require("refactoring.code_generation.langs.elixir")
+                local result = elixir.terminate("some_code")
+                assert.are.same("some_code", result)
+            end)
         end)
     end)
 
