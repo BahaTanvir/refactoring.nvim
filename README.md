@@ -92,6 +92,7 @@ are supported (with individual support for each function may vary):
 - PHP
 - Ruby
 - C#
+- Elixir
 - Vimscript (only debugging features)
 - Powershell (only debugging features)
 
