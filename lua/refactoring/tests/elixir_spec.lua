@@ -11,40 +11,52 @@ describe("elixir", function()
 
     describe("code generation", function()
         describe("function generation", function()
-            test_code_generation("should generate simple function", {
-                operation = "function",
-                name = "add",
-                args = { "a", "b" },
-                body = { "a + b" },
-            }, [[
+            test_code_generation(
+                "should generate simple function",
+                {
+                    operation = "function",
+                    name = "add",
+                    args = { "a", "b" },
+                    body = { "a + b" },
+                },
+                [[
 def add(a, b), do: a + b
 
-]])
+]]
+            )
 
-            test_code_generation("should generate multi-line function", {
-                operation = "function",
-                name = "complex_function",
-                args = { "x", "y" },
-                body = { "result = x * y", "IO.puts(result)", "result" },
-            }, [[
+            test_code_generation(
+                "should generate multi-line function",
+                {
+                    operation = "function",
+                    name = "complex_function",
+                    args = { "x", "y" },
+                    body = { "result = x * y", "IO.puts(result)", "result" },
+                },
+                [[
 def complex_function(x, y) do
 result = x * y
 IO.puts(result)
 result
 end
 
-]])
+]]
+            )
 
-            test_code_generation("should generate private function", {
-                operation = "function",
-                name = "helper",
-                args = { "value" },
-                body = { "value * 2" },
-                scope_type = "defp",
-            }, [[
+            test_code_generation(
+                "should generate private function",
+                {
+                    operation = "function",
+                    name = "helper",
+                    args = { "value" },
+                    body = { "value * 2" },
+                    scope_type = "defp",
+                },
+                [[
 defp helper(value), do: value * 2
 
-]])
+]]
+            )
         end)
 
         describe("constant generation", function()
@@ -77,13 +89,15 @@ defp helper(value), do: value * 2
             }, 'IO.puts("Debug: #{inspect(my_var)}")')
 
             it("should provide default printf statement", function()
-                local elixir = require("refactoring.code_generation.langs.elixir")
+                local elixir =
+                    require("refactoring.code_generation.langs.elixir")
                 local result = elixir.default_printf_statement()
                 assert.are.same({ 'IO.puts("%s")' }, result)
             end)
 
             it("should provide default print var statement", function()
-                local elixir = require("refactoring.code_generation.langs.elixir")
+                local elixir =
+                    require("refactoring.code_generation.langs.elixir")
                 local result = elixir.default_print_var_statement()
                 assert.are.same({ 'IO.puts("%s #{inspect(%s)}")' }, result)
             end)
@@ -97,25 +111,29 @@ defp helper(value), do: value * 2
             }, "my_function(arg1, arg2)")
 
             it("should generate return statement", function()
-                local elixir = require("refactoring.code_generation.langs.elixir")
+                local elixir =
+                    require("refactoring.code_generation.langs.elixir")
                 local result = elixir["return"]("some_value")
                 assert.are.same("some_value", result)
             end)
 
             it("should generate comment", function()
-                local elixir = require("refactoring.code_generation.langs.elixir")
+                local elixir =
+                    require("refactoring.code_generation.langs.elixir")
                 local result = elixir.comment("This is a comment")
                 assert.are.same("# This is a comment", result)
             end)
 
             it("should pack values into tuple", function()
-                local elixir = require("refactoring.code_generation.langs.elixir")
-                local result = elixir.pack({"value1", "value2"})
+                local elixir =
+                    require("refactoring.code_generation.langs.elixir")
+                local result = elixir.pack({ "value1", "value2" })
                 assert.are.same("{value1, value2}", result)
             end)
 
             it("should terminate code (no-op for Elixir)", function()
-                local elixir = require("refactoring.code_generation.langs.elixir")
+                local elixir =
+                    require("refactoring.code_generation.langs.elixir")
                 local result = elixir.terminate("some_code")
                 assert.are.same("some_code", result)
             end)
@@ -133,12 +151,12 @@ defp helper(value), do: value * 2
         it("should have proper scope configuration", function()
             local elixir_ts = require("refactoring.treesitter.langs.elixir")
             local instance = elixir_ts.new(0, "elixir")
-            
+
             -- Check that function scopes are configured
             assert.is_true(instance.block_scope["function"])
             assert.is_true(instance.block_scope.private_function)
             assert.is_true(instance.block_scope.do_block)
-            
+
             -- Check scope names
             assert.are.equal("function", instance.scope_names["function"])
             assert.are.equal("function", instance.scope_names.private_function)

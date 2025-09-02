@@ -36,7 +36,9 @@ function Elixir.new(bufnr, ft)
         },
         local_var_names = {
             InlineNode("(binary_operator left: (identifier) @tmp_capture)"),
-            InlineNode("(binary_operator left: (tuple (identifier) @tmp_capture))"),
+            InlineNode(
+                "(binary_operator left: (tuple (identifier) @tmp_capture))"
+            ),
         },
         local_var_values = {
             InlineNode("(binary_operator right: (_) @tmp_capture)"),
@@ -56,16 +58,24 @@ function Elixir.new(bufnr, ft)
             InlineNode("(try) @tmp_capture"),
         },
         function_args = {
-            InlineNode("(call target: (identifier) @_def (#match? @_def \"^def[p]?$\") (arguments (_) @tmp_capture))"),
+            InlineNode(
+                '(call target: (identifier) @_def (#match? @_def "^def[p]?$") (arguments (_) @tmp_capture))'
+            ),
         },
         function_body = {
-            InlineNode("(call target: (identifier) @_def (#match? @_def \"^def[p]?$\") (do_block (_) @tmp_capture))"),
+            InlineNode(
+                '(call target: (identifier) @_def (#match? @_def "^def[p]?$") (do_block (_) @tmp_capture))'
+            ),
         },
         return_statement = {
-            InlineNode("(call target: (identifier) @_target (#eq? @_target \"return\")) @tmp_capture"),
+            InlineNode(
+                '(call target: (identifier) @_target (#eq? @_target "return")) @tmp_capture'
+            ),
         },
         return_values = {
-            InlineNode("(call target: (identifier) @_target (#eq? @_target \"return\") (arguments (_) @tmp_capture))"),
+            InlineNode(
+                '(call target: (identifier) @_target (#eq? @_target "return") (arguments (_) @tmp_capture))'
+            ),
         },
         function_references = {
             InlineNode("(call target: (identifier) @tmp_capture)"),
@@ -89,12 +99,12 @@ function Elixir.new(bufnr, ft)
             if not parent then
                 return false
             end
-            
+
             -- Check for pipe operator context
             if parent:type() == "pipe" then
                 return true
             end
-            
+
             -- Check for dot notation (module.function calls)
             if parent:type() == "dot" then
                 local field_node = parent:field("right")[1]
@@ -102,7 +112,7 @@ function Elixir.new(bufnr, ft)
                     return true
                 end
             end
-            
+
             return false
         end,
     }

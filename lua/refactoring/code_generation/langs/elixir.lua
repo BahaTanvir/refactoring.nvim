@@ -3,24 +3,30 @@ local code_utils = require("refactoring.code_generation.utils")
 local function elixir_function(opts)
     local args = next(opts.args) and table.concat(opts.args, ", ") or ""
     local visibility = opts.scope_type == "defp" and "defp" or "def"
-    
+
     if opts.func_header == nil then
         opts.func_header = ""
     end
-    
+
     -- Handle single-line vs multi-line functions
     local body_str = code_utils.stringify_code(opts.body)
     local lines = vim.split(body_str, "\n")
     local non_empty_lines = vim.tbl_filter(function(line)
         return vim.trim(line) ~= ""
     end, lines)
-    
+
     -- Use single-line syntax for simple cases
     if #non_empty_lines == 1 and string.len(non_empty_lines[1]) < 60 then
         return ([[
 %s%s %s(%s), do: %s
 
-]]):format(opts.func_header, visibility, opts.name, args, vim.trim(non_empty_lines[1]))
+]]):format(
+            opts.func_header,
+            visibility,
+            opts.name,
+            args,
+            vim.trim(non_empty_lines[1])
+        )
     else
         return ([[
 %s%s %s(%s) do
@@ -33,7 +39,7 @@ end
 
 local function elixir_constant(opts)
     local constant_string_pattern
-    
+
     if opts.multiple then
         constant_string_pattern = ("%s = %s\n"):format(
             table.concat(opts.identifiers, ", "),
@@ -46,17 +52,17 @@ local function elixir_constant(opts)
         else
             name = opts.name
         end
-        
+
         if not opts.statement then
             opts.statement = "%s = %s"
         end
-        
+
         constant_string_pattern = (opts.statement .. "\n"):format(
             name,
             opts.value
         )
     end
-    
+
     return constant_string_pattern
 end
 
